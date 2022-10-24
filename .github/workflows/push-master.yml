@@ -1,0 +1,22 @@
+name: Build project and deploy on Firebase Hosting
+'on':
+  push:
+    branches:
+      - master
+jobs:
+  build:
+    name: Build project
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+      - name: Install
+        run: npm i
+      - name: Build
+        run: npm run buildpro
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ROLE_CHARACTER }}'
+          channelId: live
+          projectId: role-character

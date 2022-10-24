@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "expenses-sheet-914e3": {
+      "hosting": {
+        "expenses-sheet": [
+          "expenses-sheet"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "expenses-sheet-914e3"
+  }
+}
