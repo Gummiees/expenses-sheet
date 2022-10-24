@@ -5,7 +5,7 @@ export const environment = {
     storageBucket: 'expenses-sheet-914e3.appspot.com',
     apiKey: 'AIzaSyAdIJ6rRlSEGomPgnUV3pM74AauLVbJxDI',
     authDomain: 'expenses-sheet-914e3.firebaseapp.com',
-    messagingSenderId: '682048451719',
+    messagingSenderId: '682048451719'
   },
   production: true
 };
