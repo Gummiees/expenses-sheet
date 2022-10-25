@@ -1,0 +1,11 @@
+@mixin style-message($bg-color, $action-color, $text-color: 'black') {
+  @apply bg-#{$bg-color} text-#{$text-color};
+
+  .mat-simple-snackbar-action {
+    @apply text-#{$action-color};
+  }
+}
+
+@mixin invert-svg-color() {
+  filter: invert(100%);
+}

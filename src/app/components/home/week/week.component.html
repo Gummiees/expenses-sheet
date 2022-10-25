@@ -1,0 +1,142 @@
+<p-table
+  #dt
+  styleClass="p-datatable-sm p-datatable-striped"
+  responsiveLayout="stack"
+  class="w-full"
+  dataKey="id"
+  editMode="row"
+  rowGroupMode="subheader"
+  groupRowsBy="onlyDate"
+  [groupRowsByOrder]="0"
+  [value]="tableEntries"
+  [loading]="isLoading()"
+>
+  <ng-template pTemplate="caption">
+    <div class="flex items-center justify-between text-2xl">
+      <div>Current Week (week {{ today | date: 'ww' }})</div>
+      <div>{{ getDiffString() }}</div>
+    </div>
+  </ng-template>
+  <ng-template pTemplate="header">
+    <tr>
+      <th class="w-1/3">Date</th>
+      <th class="w-1/3 text-center">Type</th>
+      <th class="w-1/3 text-center">Actions</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="groupheader" let-item>
+    <tr
+      pRowGroupHeader
+      class="text-xl"
+      [ngClass]="{ 'text-red-600 font-bold': isDayWrong(item) }"
+      matTooltip="This day is missing one or more checkouts"
+      [matTooltipDisabled]="!isDayWrong(item)"
+      matTooltipPosition="below"
+    >
+      <td class="w-1/3" colspan="2"> {{ item.onlyDate }} </td>
+      <td class="w-1/3 text-right">{{ getDiffStringItem(item) }}</td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-item let-editing="editing" let-ri="rowIndex">
+    <tr [pEditableRow]="item">
+      <td class="w-1/3">
+        <p-cellEditor>
+          <ng-template pTemplate="input">
+            <div class="flex items-center">
+              <p-calendar
+                appendTo="body"
+                class="ml-2"
+                dateFormat="yy-mm-dd"
+                hourFormat="24"
+                [touchUI]="commonService.isMobileDevice()"
+                [showTime]="true"
+                [showWeek]="true"
+                [stepMinute]="15"
+                [showButtonBar]="true"
+                [(ngModel)]="item.date"
+              ></p-calendar>
+            </div>
+          </ng-template>
+          <ng-template pTemplate="output">
+            {{ item.date | date: 'HH:mm' }}
+          </ng-template>
+        </p-cellEditor>
+      </td>
+      <td class="w-1/3">
+        <p-cellEditor>
+          <ng-template pTemplate="input">
+            <mat-form-field appearance="fill" class="flex items-center justify-center">
+              <mat-label>Entry type</mat-label>
+              <mat-select [(ngModel)]="item.typeId" required>
+                <mat-option *ngFor="let type of types" [value]="type.id">
+                  {{ type.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </ng-template>
+          <ng-template pTemplate="output">
+            <div class="flex items-center justify-center">
+              <div [class]="'type type-' + getTypeName(item.typeId)">
+                {{ getTypeName(item.typeId) || 'unknown' }}
+              </div>
+            </div>
+          </ng-template>
+        </p-cellEditor>
+      </td>
+      <td class="text-center w-1/3">
+        <button
+          *ngIf="editing"
+          mat-icon-button
+          type="button"
+          color="warn"
+          aria-label="Cancel"
+          matTooltip="Cancel"
+          matTooltipPosition="below"
+          pCancelEditableRow
+          (click)="onRowEditCancel(item, ri)"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+        <button
+          *ngIf="editing"
+          mat-icon-button
+          type="button"
+          color="primary"
+          aria-label="Save"
+          matTooltip="Save"
+          matTooltipPosition="below"
+          pSaveEditableRow
+          (click)="onRowEditSave(item)"
+        >
+          <mat-icon>save</mat-icon>
+        </button>
+        <button
+          *ngIf="!editing"
+          mat-icon-button
+          type="button"
+          color="primary"
+          aria-label="Edit"
+          matTooltip="Edit"
+          matTooltipPosition="below"
+          pInitEditableRow
+          (click)="onRowEditInit(item)"
+        >
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button
+          *ngIf="!editing"
+          mat-icon-button
+          type="button"
+          color="warn"
+          aria-label="Delete"
+          matTooltip="Delete"
+          matTooltipPosition="below"
+          [disabled]="isLoading()"
+          (click)="onDelete(item)"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>

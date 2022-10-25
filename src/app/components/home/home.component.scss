@@ -1,0 +1,9 @@
+.home {
+  & > div {
+    @apply p-4 md:m-4 rounded-md shadow-md bg-white flex items-center justify-center;
+  }
+
+  & > div:not(:first-child) {
+    @apply mt-4 md:mt-0;
+  }
+}

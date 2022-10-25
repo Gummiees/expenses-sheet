@@ -20,6 +20,14 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "allowedCommonJsDependencies": [
+               "moment",
+               "jspdf-autotable",
+               "file-saver",
+               "rgbcolor",
+               "raf",
+               "core-js"
+            ],
             "outputPath": "dist/expenses-sheet",
             "index": "src/index.html",
             "main": "src/main.ts",

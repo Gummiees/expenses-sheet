@@ -1,0 +1,92 @@
+<div class="p-4 md:p-8">
+  <div class="flex justify-center">
+    <div class="rounded-lg p-8 shadow-lg bg-white flex flex-col items-start justify-center w-full">
+      <div class="w-full relative">
+        <a class="absolute" [routerLink]="['/']">
+          <mat-icon
+            class="text-center text-indigo-700"
+            aria-label="Homepage"
+            matTooltip="Homepage"
+            matTooltipPosition="below"
+          >
+            arrow_back
+          </mat-icon>
+        </a>
+        <h1 class="text-center">Settings</h1>
+        <mat-divider class="w-full mt-4 pb-4"></mat-divider>
+        <form
+          class="flex w-full flex-col items-start justify-center"
+          [formGroup]="form"
+          (ngSubmit)="onSubmit()"
+        >
+          <mat-form-field class="w-full" appearance="standard">
+            <mat-label>Email</mat-label>
+            <input
+              matInput
+              type="email"
+              autocomplete="email"
+              required
+              [formControl]="emailControl"
+            />
+            <mat-error *ngIf="emailControl.invalid && emailControl.hasError('required')">
+              You must enter an email
+            </mat-error>
+            <mat-error *ngIf="emailControl.invalid && emailControl.hasError('email')">
+              You must enter a valir email
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field class="w-full" appearance="standard">
+            <mat-label>Username</mat-label>
+            <input
+              matInput
+              type="text"
+              autocomplete="username"
+              required
+              [formControl]="usernameControl"
+            />
+            <mat-error *ngIf="usernameControl.invalid && usernameControl.hasError('required')">
+              You must enter a username
+            </mat-error>
+          </mat-form-field>
+          <button
+            mat-raised-button
+            color="primary"
+            class="w-full mt-4"
+            type="submit"
+            [disabled]="loadersService.userInfoLoading || form.invalid"
+          >
+            <mat-icon> save </mat-icon>
+            <span class="ml-2">Save</span>
+          </button>
+        </form>
+      </div>
+
+      <mat-divider class="w-full mt-4 pb-4"></mat-divider>
+
+      <div class="w-full flex flex-wrap items-center justify-between">
+        <button
+          mat-button
+          class="w-full md:w-auto"
+          color="warn"
+          type="button"
+          [disabled]="loadersService.userInfoLoading"
+          (click)="onDelete()"
+        >
+          <mat-icon> delete_forever </mat-icon>
+          <span class="md:ml-2">Delete acocunt</span>
+        </button>
+        <button
+          mat-raised-button
+          color="warn"
+          type="button"
+          class="w-full md:w-auto mt-2 md:mt-0"
+          [disabled]="loadersService.userInfoLoading"
+          (click)="onLogout()"
+        >
+          <mat-icon> logout </mat-icon>
+          <span class="ml-2">Logout</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

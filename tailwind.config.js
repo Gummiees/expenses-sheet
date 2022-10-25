@@ -3,8 +3,6 @@ module.exports = {
   content: [
     "./src/**/*.{html,ts}",
   ],
-  purge: [],
-  darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {
       lineHeight: {
@@ -36,9 +34,6 @@ module.exports = {
         400: '400ms'
       }
     }
-  },
-  variants: {
-    extend: {}
   },
   plugins: [],
   important: true

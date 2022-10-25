@@ -2,3 +2,97 @@
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
+@import 'theme/mixins';
+@import 'theme/types';
+
+body {
+  margin: 0;
+  overflow-x: hidden;
+}
+
+.error-message {
+  @include style-message(red-400, deepBlue);
+}
+
+.success-message {
+  @include style-message(green-300, indigo-900);
+}
+
+mat-tooltip-component > .mat-tooltip {
+  @apply text-xs shadow;
+}
+
+p-columnfilterformelement > input.p-inputtext {
+  @apply p-1;
+}
+
+p-celleditor .mat-form-field-wrapper,
+p-celleditor .mat-form-field-appearance-standard .mat-form-field-flex {
+  @apply p-0;
+}
+
+p-celleditor .mat-form-field-underline {
+  position: static;
+}
+
+button.mat-mini-fab .mat-button-wrapper,
+button.mat-fab .mat-button-wrapper,
+button.mat-icon-button .mat-button-wrapper {
+  @apply flex items-center justify-center;
+}
+
+button:disabled,
+button.mat-button.mat-button-disabled,
+button.mat-raised-button.mat-button-disabled,
+button.mat-stroked-button.mat-button-disabled,
+button.mat-flat-button.mat-button-disabled,
+button.mat-icon-button.mat-button-disabled,
+button.mat-fab.mat-button-disabled,
+button.mat-mini-fab.mat-button-disabled {
+  @apply cursor-not-allowed;
+}
+
+button.mat-icon-button {
+  transition: background-color 0.2s ease-in-out;
+}
+
+button.mat-icon-button.micro-button {
+  width: 24px;
+  height: 24px;
+}
+
+button.mat-button-base .mat-button-wrapper {
+  display: flex;
+}
+
+.fullscreen-mode {
+  @apply h-screen w-screen absolute z-50 bg-white top-0 left-0 p-6 pb-0 flex flex-col;
+}
+
+.p-column-filter-clear-button,
+.p-column-filter-clear-button *,
+.p-column-filter-menu-button,
+.p-column-filter-menu-button * {
+  @apply p-0 m-0 w-0 h-0;
+}
+
+.main-content > *:not(router-outlet) {
+  @apply flex-grow flex flex-col;
+}
+
+body .cdk-overlay-pane {
+  max-width: 90vw !important;
+}
+
+.p-checkbox .p-checkbox-box.p-highlight .p-checkbox-icon.pi-check::before {
+  top: 8px;
+  left: 2px;
+}
+
+.invert-svg-color {
+  @include invert-svg-color;
+}
+
+.mat-progress-bar-fill::after {
+  @apply bg-pink-500;
+}

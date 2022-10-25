@@ -1,0 +1,75 @@
+<div class="flex items-center justify-center w-full">
+  <div
+    class="
+      flex flex-col
+      items-start
+      justify-center
+      max-w-screen-sm
+      shadow-lg
+      bg-white
+      rounded-lg
+      p-8
+      m-12
+      w-full
+      md:w-9/12
+    "
+  >
+    <div class="w-full">
+      <h1 class="text-center">Welcome to Time Sheet!</h1>
+      <h2 class="text-center">Sign In</h2>
+      <mat-divider class="w-full mt-4 pb-4"></mat-divider>
+      <div class="w-full flex flex-col items-center justify-center">
+        <button
+          mat-stroked-button
+          type="button"
+          color="primary"
+          class="flex justify-center w-auto mt-2"
+          [disabled]="loadersService.signInLoading"
+          (click)="onGoogleSignIn()"
+        >
+          <img
+            src="assets/images/google.svg"
+            alt="Google logo"
+            class="w-6"
+            aria-label="Sign In with Google"
+          />
+          <span class="ml-2">Sign In with Google</span>
+        </button>
+        <button
+          mat-stroked-button
+          type="button"
+          color="primary"
+          class="flex justify-center w-auto mt-2"
+          [disabled]="loadersService.signInLoading"
+          (click)="onGitHubSignIn()"
+        >
+          <img
+            src="assets/images/github.svg"
+            alt="GitHub logo"
+            class="w-6 invert-svg-color"
+            aria-label="Sign In with GitHub"
+          />
+          <span class="ml-2">Sign In with GitHub</span>
+        </button>
+        <button
+          mat-stroked-button
+          type="button"
+          color="primary"
+          class="flex justify-center w-auto mt-2"
+          [disabled]="loadersService.signInLoading"
+          (click)="onTwitterSignIn()"
+        >
+          <img
+            src="assets/images/twitter.svg"
+            alt="Twitter logo"
+            class="w-6"
+            aria-label="Sign In with Twitter"
+          />
+          <span class="ml-2">Sign In with Twitter</span>
+        </button>
+      </div>
+      <mat-divider class="w-full mt-4 pb-4"></mat-divider>
+      <div class="text-center"> This is still a Work In Progress. </div>
+    </div>
+  </div>
+</div>

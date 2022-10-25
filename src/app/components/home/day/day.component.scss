@@ -1,0 +1,11 @@
+.daily-entries {
+  & > div:not(:first-child),
+  .no-final-checkout,
+  .daily-separator {
+    @apply ml-2;
+  }
+
+  .parent-type.type-checkout:not(.last-entry) {
+    @apply pr-2 border-r-2 border-solid border-black;
+  }
+}

@@ -1,0 +1,10 @@
+<h1 mat-dialog-title *ngIf="data.header">{{ data.header }}</h1>
+<mat-dialog-content *ngIf="data.body">
+  {{ data.body }}
+</mat-dialog-content>
+<mat-dialog-actions class="w-full flex items-center justify-between">
+  <button mat-stroked-button type="button" color="primary" mat-dialog-close>No</button>
+  <button mat-flat-button type="button" color="primary" cdkFocusInitial [mat-dialog-close]="true">
+    Yes
+  </button>
+</mat-dialog-actions>
