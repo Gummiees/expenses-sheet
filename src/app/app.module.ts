@@ -24,8 +24,8 @@ import { SharedModule } from '@shared/shared.module';
 import { Firestore } from 'firebase/firestore';
 import { RippleModule } from 'primeng/ripple';
 import { environment } from '../environments/environment';
-import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { AppRoutingModule } from './app.routes';
 
 @NgModule({
   declarations: [AppComponent],

@@ -21,6 +21,28 @@ const routes: Routes = [
     ...canActivate(redirectUnauthorizedToSignIn)
   },
   {
+    path: 'tag',
+    loadChildren: () => import('./components/tag/tag.module').then((m) => m.TagModule),
+    ...canActivate(redirectUnauthorizedToSignIn)
+  },
+  {
+    path: 'entry',
+    loadChildren: () => import('./components/entry/entry.module').then((m) => m.EntryModule),
+    ...canActivate(redirectUnauthorizedToSignIn)
+  },
+  {
+    path: 'add-entry',
+    loadChildren: () =>
+      import('./components/add-entry/add-entry.module').then((m) => m.AddEntryModule),
+    ...canActivate(redirectUnauthorizedToSignIn)
+  },
+  {
+    path: 'category',
+    loadChildren: () =>
+      import('./components/category/category.module').then((m) => m.CategoryModule),
+    ...canActivate(redirectUnauthorizedToSignIn)
+  },
+  {
     path: 'sign-in',
     loadChildren: () => import('./components/sign-in/sign-in.module').then((m) => m.SignInModule),
     ...canActivate(redirectLoggedInToHome)
