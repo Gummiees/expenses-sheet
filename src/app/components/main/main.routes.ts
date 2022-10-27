@@ -7,22 +7,7 @@ const routes: Routes = [
   {
     path: '',
     component: MainComponent,
-    canDeactivate: [CanDeactivateGuard],
-    children: [
-      {
-        path: '',
-        redirectTo: 'home',
-        pathMatch: 'full'
-      },
-      {
-        path: 'home',
-        loadChildren: () => import('../home/home.module').then((m) => m.HomeModule)
-      },
-      {
-        path: 'history',
-        loadChildren: () => import('../history/history.module').then((m) => m.HistoryModule)
-      }
-    ]
+    canDeactivate: [CanDeactivateGuard]
   }
 ];
 

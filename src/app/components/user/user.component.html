@@ -53,7 +53,7 @@
             color="primary"
             class="w-full mt-4"
             type="submit"
-            [disabled]="loadersService.userInfoLoading || form.invalid"
+            [disabled]="form.invalid"
           >
             <mat-icon> save </mat-icon>
             <span class="ml-2">Save</span>
@@ -69,7 +69,6 @@
           class="w-full md:w-auto"
           color="warn"
           type="button"
-          [disabled]="loadersService.userInfoLoading"
           (click)="onDelete()"
         >
           <mat-icon> delete_forever </mat-icon>
@@ -80,7 +79,6 @@
           color="warn"
           type="button"
           class="w-full md:w-auto mt-2 md:mt-0"
-          [disabled]="loadersService.userInfoLoading"
           (click)="onLogout()"
         >
           <mat-icon> logout </mat-icon>

@@ -1,23 +1,17 @@
-import { collectionData, query, where } from '@angular/fire/firestore';
 import {
-  addDoc,
-  collection,
-  CollectionReference,
-  deleteDoc,
-  doc,
-  Firestore,
-  FirestoreDataConverter,
-  Query,
-  updateDoc
-} from '@firebase/firestore';
+  AngularFirestore,
+  AngularFirestoreCollection,
+  DocumentChangeAction
+} from '@angular/fire/compat/firestore';
+import { FirestoreDataConverter, Query } from '@firebase/firestore';
 import { BaseUser } from '@shared/models/base.model';
 import { UserService } from '@shared/services/user.service';
 import firebase from 'firebase/compat/app';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 
 export class BaseService<T extends BaseUser> {
   protected query?: Query<T> | null;
-  protected collection?: CollectionReference<T> | null;
+  protected collection?: AngularFirestoreCollection<T> | null;
   protected converter: FirestoreDataConverter<T> = {
     toFirestore: (item) => ({ id: item.id }),
     fromFirestore: (snapshot) => {
@@ -30,32 +24,32 @@ export class BaseService<T extends BaseUser> {
 
   constructor(
     public collectionName: string,
-    protected firestore: Firestore,
+    protected firestore: AngularFirestore,
     protected userService: UserService
   ) {}
 
-  protected getCollection(): CollectionReference<T> {
+  protected getCollection(user: firebase.User): AngularFirestoreCollection<T> {
     if (!this.collection) {
-      this.collection = collection(this.firestore, this.collectionName).withConverter(
-        this.converter
+      this.collection = this.firestore.collection<T>(this.collectionName, (ref) =>
+        ref.where('userId', '==', user.uid)
       );
     }
     return this.collection;
   }
 
-  protected getQuery(user: firebase.User): Query<T> {
-    if (!this.query) {
-      const genericCollection = collection(this.firestore, this.collectionName);
-
-      this.query = query(genericCollection, where('userId', '==', user.uid)).withConverter(
-        this.converter
-      );
-    }
-    return this.query;
-  }
-
   public listItems(user: firebase.User): Observable<T[]> {
-    return collectionData<T>(this.getQuery(user).withConverter(this.converter));
+    return this.getCollection(user)
+      .snapshotChanges()
+      .pipe(
+        map((items: DocumentChangeAction<T>[]) => {
+          return items.map((item: DocumentChangeAction<T>) => {
+            return {
+              ...item.payload.doc.data(),
+              id: item.payload.doc.id
+            };
+          });
+        })
+      );
   }
 
   public async createItem(item: T): Promise<void> {
@@ -64,7 +58,7 @@ export class BaseService<T extends BaseUser> {
       throw new Error('You must be signed in');
     }
     item.userId = user.uid;
-    await addDoc(this.getCollection(), item);
+    await this.getCollection(user).add(item);
   }
 
   public async deleteItem(item: T): Promise<void> {
@@ -72,8 +66,7 @@ export class BaseService<T extends BaseUser> {
     if (!user) {
       throw new Error('You must be signed in');
     }
-    const reference = doc(this.getCollection(), `${this.collectionName}/${item.id}`);
-    await deleteDoc(reference);
+    await this.getCollection(user).doc(item.id).delete();
   }
 
   public async updateItem(item: T): Promise<void> {
@@ -84,7 +77,17 @@ export class BaseService<T extends BaseUser> {
     if (!item.id) {
       throw new Error('Item ID is required');
     }
-    const reference = doc(this.getCollection(), `${this.collectionName}/${item.id}`);
-    await updateDoc(reference, { ...item } as any);
+    await this.getCollection(user).doc(item.id).update(item);
+  }
+
+  public async setItem(item: T): Promise<void> {
+    const user: firebase.User | null = await this.userService.user;
+    if (!user) {
+      throw new Error('You must be signed in');
+    }
+    if (!item.id) {
+      throw new Error('Item ID is required');
+    }
+    await this.getCollection(user).doc(item.id).set(item);
   }
 }

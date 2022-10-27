@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
-import { HomeWorkflowService } from 'src/app/components/home/home.workflow.service';
+import { MainWorkflowService } from 'src/app/components/main/main.workflow.service';
 
 @Injectable({ providedIn: 'root' })
 export class WorkflowService {
   private _unsavedChanges: boolean = false;
-  constructor(private homeService: HomeWorkflowService) {}
+  constructor(private mainWorkflowService: MainWorkflowService) {}
 
   public get unsavedChanges(): boolean {
-    return this._unsavedChanges || this.homeService.unsavedChanges;
+    return this._unsavedChanges || this.mainWorkflowService.unsavedChanges;
   }
 
   public set unsavedChanges(changes: boolean) {
@@ -16,6 +16,6 @@ export class WorkflowService {
 
   public removeChanges() {
     this._unsavedChanges = false;
-    this.homeService.unsavedChanges = false;
+    this.mainWorkflowService.unsavedChanges = false;
   }
 }

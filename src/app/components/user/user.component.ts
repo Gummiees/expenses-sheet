@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { BasicDialogModel } from '@shared/models/dialog.model';
 import { User } from '@shared/models/user.model';
 import { DialogService } from '@shared/services/dialog.service';
-import { LoadersService } from '@shared/services/loaders.service';
 import { MeService } from '@shared/services/me.service';
 import { MessageService } from '@shared/services/message.service';
 import { Subscription } from 'rxjs';
@@ -27,7 +26,6 @@ export class UserComponent implements OnDestroy {
   private subscriptions: Subscription[] = [];
 
   constructor(
-    public loadersService: LoadersService,
     private dialogService: DialogService,
     private userSettingsService: UserSettingsService,
     private meService: MeService,
@@ -66,7 +64,6 @@ export class UserComponent implements OnDestroy {
 
   async onSubmit() {
     if (this.form.valid) {
-      this.loadersService.userInfoLoading = true;
       try {
         await this.updateProfile();
         this.messageService.showOk('Profile updated successfully');
@@ -74,12 +71,10 @@ export class UserComponent implements OnDestroy {
         console.error(e);
         this.messageService.showError(e);
       }
-      this.loadersService.userInfoLoading = false;
     }
   }
 
   private async logout() {
-    this.loadersService.userInfoLoading = true;
     try {
       await this.userSettingsService.logout();
       this.messageService.showOk('Logged out successfully');
@@ -88,11 +83,9 @@ export class UserComponent implements OnDestroy {
       console.error(e);
       this.messageService.showError(e);
     }
-    this.loadersService.userInfoLoading = false;
   }
 
   private async delete() {
-    this.loadersService.userInfoLoading = true;
     try {
       await this.userSettingsService.deleteUser();
       this.messageService.showOk('User deleted successfully');
@@ -101,7 +94,6 @@ export class UserComponent implements OnDestroy {
       console.error(e);
       this.messageService.showError(e);
     }
-    this.loadersService.userInfoLoading = false;
   }
 
   private async updateProfile() {

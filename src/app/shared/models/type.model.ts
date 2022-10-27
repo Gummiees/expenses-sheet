@@ -5,6 +5,6 @@ export interface Type extends Base {
 }
 
 export enum TypeName {
-  checkin = 'checkin',
-  checkout = 'checkout'
+  expense,
+  income
 }

@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { LoadersService } from '@shared/services/loaders.service';
 import { MessageService } from '@shared/services/message.service';
 import { SignIn, SignInService } from './sign-in.service';
 
@@ -11,7 +10,6 @@ import { SignIn, SignInService } from './sign-in.service';
 export class SignInComponent {
   public hide: boolean = true;
   constructor(
-    public loadersService: LoadersService,
     private signInService: SignInService,
     private messageService: MessageService,
     private router: Router
@@ -29,7 +27,6 @@ export class SignInComponent {
   }
 
   private async onSignIn(signInWith: SignIn) {
-    this.loadersService.signInLoading = true;
     try {
       await this.signInService.signIn(signInWith);
       this.messageService.showOk('Welcome back!');
@@ -38,6 +35,5 @@ export class SignInComponent {
       console.error(e);
       this.messageService.showError(e);
     }
-    this.loadersService.signInLoading = false;
   }
 }

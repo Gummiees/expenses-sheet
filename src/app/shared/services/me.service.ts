@@ -1,14 +1,9 @@
 import { Injectable } from '@angular/core';
-import { collectionData } from '@angular/fire/firestore';
 import {
-  addDoc,
-  CollectionReference,
-  deleteDoc,
-  doc,
-  Firestore,
-  FirestoreDataConverter,
-  updateDoc
-} from '@firebase/firestore';
+  AngularFirestore,
+  AngularFirestoreCollection,
+  DocumentChangeAction
+} from '@angular/fire/compat/firestore';
 import { User } from '@shared/models/user.model';
 import firebase from 'firebase/compat/app';
 import { of, Subject } from 'rxjs';
@@ -23,15 +18,23 @@ import { UserService } from './user.service';
 export class MeService extends BaseService<User> {
   public user: User | null = null;
   public $user: Subject<User | null> = new Subject();
-  protected userCollection?: CollectionReference<User> | null;
-  protected userQuery?: FirestoreDataConverter<User> | null;
+  protected userCollection?: AngularFirestoreCollection<User> | null;
   constructor(
-    protected firestore: Firestore,
+    protected firestore: AngularFirestore,
     protected userService: UserService,
     private commonService: CommonService
   ) {
     super('users', firestore, userService);
     this.getMe().then((user) => (this.user = user));
+  }
+
+  protected getUserCollection(user: firebase.User): AngularFirestoreCollection<User> {
+    if (!this.userCollection) {
+      this.userCollection = this.firestore.collection<User>('users', (ref) =>
+        ref.where('userId', '==', user.uid)
+      );
+    }
+    return this.userCollection;
   }
 
   public async userExists(userAuth: firebase.User | null): Promise<boolean> {
@@ -54,7 +57,8 @@ export class MeService extends BaseService<User> {
         resolve(null);
         return;
       }
-      collectionData<User>(this.getQuery(userAuth))
+      this.getUserCollection(userAuth)
+        .snapshotChanges()
         .pipe(
           catchError((err) => {
             console.error(err);
@@ -62,9 +66,11 @@ export class MeService extends BaseService<User> {
           }),
           first()
         )
-        .subscribe((items: User[]) => {
+        .subscribe((items: DocumentChangeAction<User>[]) => {
           if (items && items.length > 0) {
-            resolve(items[0]);
+            const data: User = items[0].payload.doc.data() as User;
+            data.id = items[0].payload.doc.id;
+            resolve(data);
           } else {
             resolve(null);
           }
@@ -84,10 +90,11 @@ export class MeService extends BaseService<User> {
     const userData: User = {
       userId: user.uid,
       email: user.email,
-      username: user.displayName
+      username: user.displayName,
+      currency: '€'
     };
 
-    await addDoc(this.getCollection(), userData);
+    await this.getUserCollection(userAuth).add(userData);
     this.userChanged(userData);
   }
 
@@ -101,8 +108,7 @@ export class MeService extends BaseService<User> {
     if (!user) {
       throw new Error('You must be signed in');
     }
-    const reference = doc(this.getCollection(), `${this.collectionName}/${user.id}`);
-    await deleteDoc(reference);
+    await this.getUserCollection(userAuth).doc(user.id).delete();
   }
 
   public async updateUser(user: User): Promise<void> {
@@ -117,8 +123,23 @@ export class MeService extends BaseService<User> {
     if (!userId) {
       throw new Error('You must be signed in');
     }
-    const reference = doc(this.getCollection(), `${this.collectionName}/${user.id}`);
-    await updateDoc(reference, { ...user } as any);
+    await this.getUserCollection(userAuth).doc(userId.id).update(user);
+    this.userChanged(user);
+  }
+
+  public async setUser(user: User): Promise<void> {
+    const userAuth: firebase.User | null = await this.userService.user;
+    if (!userAuth) {
+      throw new Error('You must be signed in');
+    }
+    if (!user.id) {
+      throw new Error('User ID is required');
+    }
+    const userId: User | null = await this.getMe(userAuth);
+    if (!userId) {
+      throw new Error('You must be signed in');
+    }
+    await this.getUserCollection(userAuth).doc(userId.id).set(user);
     this.userChanged(user);
   }
 

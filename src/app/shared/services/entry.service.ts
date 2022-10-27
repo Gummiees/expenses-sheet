@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Firestore } from '@firebase/firestore';
-import { TimeSheet } from '@shared/models/time-sheet.model';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { Entry } from '@shared/models/entry.model';
 import { UserService } from '@shared/services/user.service';
 import firebase from 'firebase/compat/app';
 import { Observable } from 'rxjs';
@@ -10,14 +10,14 @@ import { BaseService } from './base.service';
 @Injectable({
   providedIn: 'root'
 })
-export class TimeSheetService extends BaseService<TimeSheet> {
-  constructor(protected firestore: Firestore, protected userService: UserService) {
-    super('time-sheet', firestore, userService);
+export class EntryService extends BaseService<Entry> {
+  constructor(protected firestore: AngularFirestore, protected userService: UserService) {
+    super('entries', firestore, userService);
   }
 
-  public listItems(user: firebase.User): Observable<TimeSheet[]> {
+  public listItems(user: firebase.User): Observable<Entry[]> {
     return super.listItems(user).pipe(
-      map((items: TimeSheet[]) => {
+      map((items: Entry[]) => {
         return items
           .map((item) => {
             const obj = item.date as any;
