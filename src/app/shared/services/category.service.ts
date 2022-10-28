@@ -33,7 +33,11 @@ export class CategoryService extends BaseService<Category> {
     return super
       .listItems(user)
       .pipe(combineLatestWith(this.listNoUserItems()))
-      .pipe(map((items: [Category[], Category[]]) => items.flat().sort()));
+      .pipe(
+        map((items: [Category[], Category[]]) =>
+          items.flat().sort((a: Category, b: Category) => a.name.localeCompare(b.name))
+        )
+      );
   }
 
   private listNoUserItems(): Observable<Category[]> {
