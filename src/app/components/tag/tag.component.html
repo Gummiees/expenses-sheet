@@ -1,34 +1,4 @@
-<div>
-  <mat-form-field appearance="outline">
-    <mat-label>Income tags</mat-label>
-    <mat-chip-list #incomeTags aria-label="Fruit selection">
-      <mat-chip *ngFor="let tag of (incomeTags$ | async)" (removed)="remove(tag)">
-        {{tag.name}}
-        <button matChipRemove>
-          <mat-icon>cancel</mat-icon>
-        </button>
-      </mat-chip>
-      <input placeholder="New tag..."
-             [matChipInputFor]="incomeTags"
-             [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-             [matChipInputAddOnBlur]="true"
-             (matChipInputTokenEnd)="addIncome($event.value)">
-    </mat-chip-list>
-  </mat-form-field>
-  <mat-form-field appearance="outline">
-    <mat-label>Expenses tags</mat-label>
-    <mat-chip-list #expensesTags aria-label="Fruit selection">
-      <mat-chip *ngFor="let tag of (expenseTags$ | async)" (removed)="remove(tag)">
-        {{tag.name}}
-        <button matChipRemove>
-          <mat-icon>cancel</mat-icon>
-        </button>
-      </mat-chip>
-      <input placeholder="New tag..."
-             [matChipInputFor]="expensesTags"
-             [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-             [matChipInputAddOnBlur]="true"
-             (matChipInputTokenEnd)="addExpense($event.value)">
-    </mat-chip-list>
-  </mat-form-field>
+<div class="w-full flex flex-col p-10">
+  <app-tag-by-type [type]="incomeType"></app-tag-by-type>
+  <app-tag-by-type [type]="expenseType"></app-tag-by-type>
 </div>

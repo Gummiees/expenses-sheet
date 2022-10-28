@@ -14,6 +14,8 @@ export class TagComponentService {
   public types$: BehaviorSubject<Type[]> = new BehaviorSubject<Type[]>(this.types || []);
   private tags: Tag[] = [];
   public tags$: BehaviorSubject<Tag[]> = new BehaviorSubject<Tag[]>(this.tags || []);
+  private noUserTags: Tag[] = [];
+  public noUserTags$: BehaviorSubject<Tag[]> = new BehaviorSubject<Tag[]>(this.noUserTags || []);
   constructor(
     private userService: UserService,
     private tagService: TagService,
@@ -21,6 +23,7 @@ export class TagComponentService {
   ) {
     this.subscribeToTypes();
     this.subscribeToTags();
+    this.subscribeToNoUserTags();
   }
 
   private subscribeToTypes() {
@@ -36,6 +39,18 @@ export class TagComponentService {
       this.tagService.listItems(user).subscribe((tags: Tag[]) => {
         this.tags = [...tags];
         this.tags$.next(this.tags);
+      });
+    } else {
+      throw new Error('You must be logged in to view tags');
+    }
+  }
+
+  private async subscribeToNoUserTags() {
+    const user: firebase.User | null = await this.userService.user;
+    if (user) {
+      this.tagService.listNoUserItems().subscribe((noUserTags: Tag[]) => {
+        this.noUserTags = [...noUserTags];
+        this.noUserTags$.next(this.noUserTags);
       });
     } else {
       throw new Error('You must be logged in to view tags');

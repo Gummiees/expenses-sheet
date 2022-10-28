@@ -9,7 +9,7 @@ import { BaseService } from '@shared/services/base.service';
 import { UserService } from '@shared/services/user.service';
 import firebase from 'firebase/compat/app';
 import { Observable } from 'rxjs';
-import { combineLatestWith, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -32,15 +32,10 @@ export class TagService extends BaseService<Tag> {
   public listItems(user: firebase.User): Observable<Tag[]> {
     return super
       .listItems(user)
-      .pipe(combineLatestWith(this.listNoUserItems()))
-      .pipe(
-        map((items: [Tag[], Tag[]]) =>
-          items.flat().sort((a: Tag, b: Tag) => a.name.localeCompare(b.name))
-        )
-      );
+      .pipe(map((items: Tag[]) => items.sort((a: Tag, b: Tag) => a.name.localeCompare(b.name))));
   }
 
-  private listNoUserItems(): Observable<Tag[]> {
+  public listNoUserItems(): Observable<Tag[]> {
     return this.getNoUserCollection()
       .snapshotChanges()
       .pipe(
