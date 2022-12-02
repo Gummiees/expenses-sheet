@@ -33,8 +33,8 @@ export class CategoryFormComponent implements OnDestroy {
 
   constructor(public categoryComponentService: CategoryComponentService) {
     this.setForm();
-    this.subscribeToTags();
     this.subscribeToTypes();
+    this.subscribeToTypeControl();
   }
 
   ngOnDestroy(): void {
@@ -95,14 +95,20 @@ export class CategoryFormComponent implements OnDestroy {
   }
 
   private subscribeToTags() {
+    const sub = this.categoryComponentService.tags$.subscribe((tags) => {
+      this.tags = tags.filter((tag) => tag.typeId === this.typeControl.value.id);
+    });
+    this.subscriptions.push(sub);
+  }
+
+  private subscribeToTypes() {
     const sub = this.categoryComponentService.types$.subscribe(
       (types) => (this.types = [...types])
     );
     this.subscriptions.push(sub);
   }
 
-  private subscribeToTypes() {
-    const sub = this.categoryComponentService.tags$.subscribe((tags) => (this.tags = [...tags]));
-    this.subscriptions.push(sub);
+  private subscribeToTypeControl() {
+    this.typeControl.valueChanges.subscribe(() => this.subscribeToTags());
   }
 }
