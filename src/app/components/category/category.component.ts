@@ -11,7 +11,12 @@ export class CategoryComponent {
 
   constructor() {}
 
-  public onCancel() {
+  public onNew() {
+    this.createNewPressed = true;
+    this.selectedCategory = undefined;
+  }
+
+  public clean() {
     this.createNewPressed = false;
     this.selectedCategory = undefined;
   }

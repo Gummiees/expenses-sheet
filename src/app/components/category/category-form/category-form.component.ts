@@ -3,6 +3,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Category } from '@shared/models/category.model';
 import { Tag } from '@shared/models/tag.model';
 import { Type } from '@shared/models/type.model';
+import { CategoryService } from '@shared/services/category.service';
+import { MessageService } from '@shared/services/message.service';
 import { Subscription } from 'rxjs';
 import { CategoryComponentService } from '../category.component.service';
 
@@ -29,9 +31,14 @@ export class CategoryFormComponent implements OnDestroy {
   public get selected(): Category | undefined {
     return this._selected;
   }
+  @Output() public save: EventEmitter<void> = new EventEmitter();
   @Output() public cancel: EventEmitter<void> = new EventEmitter();
 
-  constructor(public categoryComponentService: CategoryComponentService) {
+  constructor(
+    public categoryComponentService: CategoryComponentService,
+    private categoryService: CategoryService,
+    private messageService: MessageService
+  ) {
     this.setForm();
     this.subscribeToTypes();
     this.subscribeToTypeControl();
@@ -41,9 +48,19 @@ export class CategoryFormComponent implements OnDestroy {
     this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 
-  public onSubmit() {
-    console.log('on submit');
-    console.log(this.form.value);
+  public async onSubmit() {
+    this.form.disable();
+    const category = this.mapFormToCategory();
+    if (!!this.selected) {
+      category.id = this.idControl.value;
+      await this.categoryService.updateItem(category);
+    } else {
+      await this.categoryService.createItem(category);
+    }
+    this.save.emit();
+    this.messageService.showOk('Category saved successfully');
+    this.form.enable();
+    this.form.reset();
   }
 
   public onCancel() {
@@ -68,6 +85,21 @@ export class CategoryFormComponent implements OnDestroy {
     } else {
       this.form.controls.tags.setValue([tag, ...currentTagControlValue]);
     }
+  }
+
+  private mapFormToCategory(): Category {
+    if (this.form.invalid) {
+      throw new Error('Form is invalid!');
+    }
+
+    const tags: Tag[] = this.tagsControl.value;
+    const tagIds = tags.map((tag) => tag.id!);
+
+    return {
+      name: this.nameControl.value,
+      typeId: this.typeControl.value.id,
+      tagIds
+    };
   }
 
   private updateForm(category?: Category) {
@@ -97,8 +129,20 @@ export class CategoryFormComponent implements OnDestroy {
   private subscribeToTags() {
     const sub = this.categoryComponentService.tags$.subscribe((tags) => {
       this.tags = tags.filter((tag) => tag.typeId === this.typeControl.value.id);
+      this.resetSelectedTags();
     });
     this.subscriptions.push(sub);
+  }
+
+  private resetSelectedTags() {
+    if (!this.typeControl.value || !this.selected) {
+      this.tagsControl.setValue([]);
+      return;
+    }
+
+    const tags = this.tags.filter((tag) => this.selected!.tagIds.includes(tag.id!));
+
+    this.tagsControl.setValue([...tags]);
   }
 
   private subscribeToTypes() {
@@ -109,6 +153,12 @@ export class CategoryFormComponent implements OnDestroy {
   }
 
   private subscribeToTypeControl() {
-    this.typeControl.valueChanges.subscribe(() => this.subscribeToTags());
+    this.typeControl.valueChanges.subscribe((val) => {
+      if (!!val) {
+        this.subscribeToTags();
+      } else {
+        this.tags = [];
+      }
+    });
   }
 }

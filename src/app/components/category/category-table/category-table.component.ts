@@ -14,6 +14,7 @@ import { BasicDialogModel } from '@shared/models/dialog.model';
 import { Type } from '@shared/models/type.model';
 import { CategoryService } from '@shared/services/category.service';
 import { DialogService } from '@shared/services/dialog.service';
+import { MessageService } from '@shared/services/message.service';
 import { combineLatest, filter, firstValueFrom, Subscription } from 'rxjs';
 import { CategoryComponentService } from '../category.component.service';
 import { CategoryTable } from './category-table.model';
@@ -35,7 +36,8 @@ export class CategoryTableComponent implements AfterViewInit, OnDestroy {
   constructor(
     public categoryComponentService: CategoryComponentService,
     private categoryService: CategoryService,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private messageService: MessageService
   ) {
     this.dataSource = new MatTableDataSource();
     this.subscribeToCategories();
@@ -65,6 +67,7 @@ export class CategoryTableComponent implements AfterViewInit, OnDestroy {
     const deleteConfirmation = await firstValueFrom(this.dialogService.openDialog(dialog));
     if (deleteConfirmation) {
       await this.categoryService.deleteItem(category);
+      this.messageService.showOk('Category deleted successfully');
     }
   }
 

@@ -15,7 +15,7 @@
     <th mat-header-cell *matHeaderCellDef aria-label="row actions">Actions</th>
     <td mat-cell *matCellDef="let element">
       <div class="flex gap-1">
-        <button mat-mini-fab aria-label="Update category" matTooltip="Update category" matTooltipPosition="left" (click)="onEdit(element)">
+        <button mat-mini-fab color="primary" aria-label="Update category" matTooltip="Update category" matTooltipPosition="left" (click)="onEdit(element)">
           <mat-icon>edit</mat-icon>
         </button>
         <button mat-mini-fab color="warn" aria-label="Delete category" matTooltip="Delete category" matTooltipPosition="right" (click)="onDelete(element)">

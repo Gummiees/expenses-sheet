@@ -13,6 +13,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
 import { DialogService } from '@shared/services/dialog.service';
+import { MessageService } from '@shared/services/message.service';
 import { SharedModule } from '@shared/shared.module';
 import { CategoryFormComponent } from './category-form/category-form.component';
 import { CategoryTableComponent } from './category-table/category-table.component';
@@ -39,6 +40,6 @@ import { CategoryRoutingModule } from './category.routes';
     MatInputModule,
     MatChipsModule
   ],
-  providers: [CategoryComponentService, DialogService]
+  providers: [CategoryComponentService, DialogService, MessageService]
 })
 export class CategoryModule {}
