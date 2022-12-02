@@ -1,0 +1,34 @@
+
+
+  <mat-card>
+
+  <table mat-table [dataSource]="dataSource" matSort>
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header aria-label="row names"> Name </th>
+    <td mat-cell *matCellDef="let element"> {{ element.name }} </td>
+  </ng-container>
+  <ng-container matColumnDef="type">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header aria-label="row types"> Type </th>
+    <td mat-cell *matCellDef="let element"> {{ element.type }} </td>
+  </ng-container>
+  <ng-container matColumnDef="action" stickyEnd>
+    <th mat-header-cell *matHeaderCellDef aria-label="row actions">Actions</th>
+    <td mat-cell *matCellDef="let element">
+      <div class="flex gap-1">
+        <button mat-mini-fab aria-label="Update category" matTooltip="Update category" matTooltipPosition="left" (click)="onEdit(element)">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-mini-fab color="warn" aria-label="Delete category" matTooltip="Delete category" matTooltipPosition="right" (click)="onDelete(element)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <mat-paginator
+  [pageSize]="10" [pageSizeOptions]="[10, 25, 100]" aria-label="Select page"></mat-paginator>
+</mat-card>

@@ -7,7 +7,7 @@ import {
 } from '@shared/components/basic-dialog/basic-dialog.component';
 import { BasicDialogModel } from '@shared/models/dialog.model';
 import { Observable } from 'rxjs';
-import { filter, first } from 'rxjs/operators';
+import { filter, first, map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +15,7 @@ import { filter, first } from 'rxjs/operators';
 export class DialogService {
   constructor(private dialog: MatDialog) {}
 
-  openDialog(model: BasicDialogModel, includeFalses?: boolean): Observable<void> {
+  openDialog(model: BasicDialogModel, removeFalses?: boolean): Observable<boolean> {
     const data: BasicDialogData = {
       header: model.header,
       body: model.body
@@ -27,7 +27,8 @@ export class DialogService {
 
     return dialogRef.afterClosed().pipe(
       first(),
-      filter((result) => includeFalses || !!result)
+      filter((result) => !removeFalses || (removeFalses && !!result)),
+      map((result) => !!result)
     );
   }
 

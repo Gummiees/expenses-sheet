@@ -1,21 +1,6 @@
-<div>
-  <form
-  class="flex"
-  [formGroup]="form"
-  (ngSubmit)="onSubmit()">
-    <mat-form-field appearance="outline">
-      <mat-label>Your categories</mat-label>
-      <mat-select [formControl]="selectorControl" multiple>
-        <mat-select-trigger>
-          {{selectorControl.value?.[0] || ''}}
-          <span *ngIf="(selectorControl.value?.length || 0) > 1" class="example-additional-selection">
-            (+{{(selectorControl.value?.length || 0) - 1}} {{selectorControl.value?.length === 2 ? 'other' : 'others'}})
-          </span>
-        </mat-select-trigger>
-        <mat-option *ngFor="let category of (categoryService.categories$ | async)" [value]="category">{{category.name}}</mat-option>
-      </mat-select>
-    </mat-form-field>
-  </form>
-  <button mat-button-raised>Create new category</button>
+<div class="flex flex-col gap-2">
+  <button mat-raised-button  color="accent" (click)="createNewPressed = true">Create new category</button>
+  <app-category-table (edit)="selectedCategory = $event"></app-category-table>
+  <app-category-form *ngIf="selectedCategory || createNewPressed" [selected]="selectedCategory" (cancel)="onCancel()"></app-category-form>
 </div>
 

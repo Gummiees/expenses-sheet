@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Category } from '@shared/models/category.model';
+import { Tag } from '@shared/models/tag.model';
 import { Type } from '@shared/models/type.model';
 import { CategoryService } from '@shared/services/category.service';
+import { TagService } from '@shared/services/tag.service';
 import { TypeService } from '@shared/services/type.service';
 import { UserService } from '@shared/services/user.service';
 import firebase from 'firebase/compat/app';
@@ -16,12 +18,16 @@ export class CategoryComponentService {
   public categories$: BehaviorSubject<Category[]> = new BehaviorSubject<Category[]>(
     this.categories || []
   );
+  private tags: Tag[] = [];
+  public tags$: BehaviorSubject<Tag[]> = new BehaviorSubject<Tag[]>(this.tags || []);
   constructor(
     private userService: UserService,
     private categoryService: CategoryService,
+    private tagService: TagService,
     private typeService: TypeService
   ) {
     this.subscribeToTypes();
+    this.subscribeToTags();
     this.subscribeToCategories();
   }
 
@@ -41,6 +47,18 @@ export class CategoryComponentService {
       });
     } else {
       throw new Error('You must be logged in to view categories');
+    }
+  }
+
+  private async subscribeToTags() {
+    const user: firebase.User | null = await this.userService.user;
+    if (user) {
+      this.tagService.listItems(user).subscribe((tags: Tag[]) => {
+        this.tags = [...tags];
+        this.tags$.next(this.tags);
+      });
+    } else {
+      throw new Error('You must be logged in to view tags');
     }
   }
 }
