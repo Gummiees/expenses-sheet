@@ -22,7 +22,11 @@
       </mat-form-field>
       <mat-form-field *ngIf="typeControl.valid" appearance="outline" class="w-full">
         <mat-label>{{typeControl.value.name | titlecase }} tags</mat-label>
-        <input matInput formControlName="tags">
+        <mat-chip-list aria-label="Dog selection" selectable multiple>
+          <mat-chip *ngFor="let tag of tags" [selected]="isTagSelected(tag)" (click)="onTagClicked(tag)">
+            {{tag.name}}
+          </mat-chip>
+        </mat-chip-list>
         {{form.controls.tags.value | json }}
         <mat-hint>Select the tags associated to the category</mat-hint>
       </mat-form-field>
