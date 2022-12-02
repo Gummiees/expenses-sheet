@@ -8,8 +8,7 @@ import { CategoryComponentService } from '../category.component.service';
 
 @Component({
   selector: 'app-category-form',
-  templateUrl: './category-form.component.html',
-  styleUrls: ['./category-form.component.scss']
+  templateUrl: './category-form.component.html'
 })
 export class CategoryFormComponent implements OnDestroy {
   public form: FormGroup = new FormGroup({});

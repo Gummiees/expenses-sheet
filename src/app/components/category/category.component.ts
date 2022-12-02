@@ -3,8 +3,7 @@ import { Category } from '@shared/models/category.model';
 
 @Component({
   selector: 'app-category',
-  templateUrl: './category.component.html',
-  styleUrls: ['./category.component.scss']
+  templateUrl: './category.component.html'
 })
 export class CategoryComponent {
   public createNewPressed = false;

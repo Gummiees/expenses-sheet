@@ -20,8 +20,7 @@ import { CategoryTable } from './category-table.model';
 
 @Component({
   selector: 'app-category-table',
-  templateUrl: './category-table.component.html',
-  styleUrls: ['./category-table.component.scss']
+  templateUrl: './category-table.component.html'
 })
 export class CategoryTableComponent implements AfterViewInit, OnDestroy {
   public displayedColumns: string[] = ['name', 'type', 'action'];
