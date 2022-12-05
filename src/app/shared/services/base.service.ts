@@ -52,13 +52,14 @@ export class BaseService<T extends BaseUser> {
       );
   }
 
-  public async createItem(item: T): Promise<void> {
+  public async createItem(item: T): Promise<string> {
     const user: firebase.User | null = await this.userService.user;
     if (!user) {
       throw new Error('You must be signed in');
     }
     item.userId = user.uid;
-    await this.getCollection(user).add(item);
+    const docCreated = await this.getCollection(user).add(item);
+    return docCreated.id;
   }
 
   public async deleteItem(item: T): Promise<void> {

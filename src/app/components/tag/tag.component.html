@@ -1,4 +1,6 @@
-<div class="w-full flex flex-col">
-  <app-tag-by-type [type]="incomeType"></app-tag-by-type>
-  <app-tag-by-type [type]="expenseType"></app-tag-by-type>
+<div class="flex flex-col gap-2">
+  <button mat-raised-button  color="accent" (click)="onNew()">Create new Tag</button>
+  <app-tag-table (edit)="selectedTag = $event"></app-tag-table>
+  <app-tag-form *ngIf="selectedTag || createNewPressed" [selected]="selectedTag" (save)="clean()" (cancel)="clean()"></app-tag-form>
 </div>
+

@@ -1,24 +1,22 @@
-import { Component, OnDestroy } from '@angular/core';
-import { Type, TypeName } from '@shared/models/type.model';
-import { Subscription } from 'rxjs';
-import { TagComponentService } from './tag.component.service';
+import { Component } from '@angular/core';
+import { Tag } from '@shared/models/tag.model';
 @Component({
   selector: 'app-tag',
   templateUrl: './tag.component.html'
 })
-export class TagComponent implements OnDestroy {
-  public incomeType?: Type;
-  public expenseType?: Type;
-  private subscription?: Subscription;
+export class TagComponent {
+  public createNewPressed = false;
+  public selectedTag?: Tag;
 
-  constructor(public tagComponentService: TagComponentService) {
-    this.subscription = this.tagComponentService.types$.subscribe((types) => {
-      this.incomeType = types.find((type) => type.name === TypeName.income.toString());
-      this.expenseType = types.find((type) => type.name === TypeName.expense.toString());
-    });
+  constructor() {}
+
+  public onNew() {
+    this.createNewPressed = true;
+    this.selectedTag = undefined;
   }
 
-  ngOnDestroy() {
-    this.subscription?.unsubscribe();
+  public clean() {
+    this.createNewPressed = false;
+    this.selectedTag = undefined;
   }
 }
