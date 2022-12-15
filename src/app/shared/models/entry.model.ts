@@ -5,6 +5,6 @@ export interface Entry extends BaseUser {
   amout: number;
   date: Date;
   description?: string;
-  categoryId?: string;
+  categoryIds: string[];
   tagIds: string[];
 }
