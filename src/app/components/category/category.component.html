@@ -1,6 +1,6 @@
 <div class="flex flex-col gap-2">
   <button mat-raised-button  color="accent" (click)="onNew()">Create new category</button>
-  <app-category-table (edit)="selectedCategory = $event"></app-category-table>
+  <app-category-table (edit)="selectedCategory = $event" (delete)="clean()"></app-category-table>
   <app-category-form *ngIf="selectedCategory || createNewPressed" [selected]="selectedCategory" (save)="clean()" (cancel)="clean()"></app-category-form>
 </div>
 

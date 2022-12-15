@@ -16,7 +16,6 @@ import { combineLatestWith, map } from 'rxjs/operators';
 })
 export class CategoryService extends BaseService<Category> {
   protected noUserCollection?: AngularFirestoreCollection<Category> | null;
-  protected byTagIdCollection?: AngularFirestoreCollection<Category> | null;
   constructor(protected firestore: AngularFirestore, protected userService: UserService) {
     super('categories', firestore, userService);
   }
@@ -28,18 +27,6 @@ export class CategoryService extends BaseService<Category> {
       );
     }
     return this.noUserCollection;
-  }
-
-  protected getByTagIdCollection(
-    user: firebase.User,
-    tagId: string
-  ): AngularFirestoreCollection<Category> {
-    if (!this.byTagIdCollection) {
-      this.byTagIdCollection = this.firestore.collection<Category>(this.collectionName, (ref) =>
-        ref.where('userId', '==', user.uid).where('tagIds', 'array-contains', tagId)
-      );
-    }
-    return this.byTagIdCollection;
   }
 
   public listItems(user: firebase.User): Observable<Category[]> {
@@ -54,7 +41,7 @@ export class CategoryService extends BaseService<Category> {
   }
 
   public listItemsByTagId(user: firebase.User, tagId: string): Observable<Category[]> {
-    return this.getByTagIdCollection(user, tagId)
+    return this.getCollection(user)
       .snapshotChanges()
       .pipe(
         map((items: DocumentChangeAction<Category>[]) => {
@@ -64,6 +51,11 @@ export class CategoryService extends BaseService<Category> {
               id: item.payload.doc.id
             };
           });
+        }),
+        map((categories: Category[]) => {
+          return categories.filter((category) =>
+            category.tagIds.some((_tagId) => tagId === _tagId)
+          );
         })
       );
   }

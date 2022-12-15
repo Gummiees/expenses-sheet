@@ -30,6 +30,7 @@ export class EntryTableComponent implements AfterViewInit, OnDestroy {
   public entries: Entry[] = [];
   public dataSource: MatTableDataSource<EntryTable>;
   @Output() public edit: EventEmitter<Entry> = new EventEmitter();
+  @Output() public delete: EventEmitter<void> = new EventEmitter();
 
   @ViewChild(MatPaginator) paginator?: MatPaginator;
   @ViewChild(MatSort) sort?: MatSort;
@@ -70,6 +71,7 @@ export class EntryTableComponent implements AfterViewInit, OnDestroy {
     if (deleteConfirmation) {
       await this.entryService.deleteItem(entry);
       this.messageService.showOk('Entry deleted successfully');
+      this.delete.emit();
     }
   }
 

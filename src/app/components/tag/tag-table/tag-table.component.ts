@@ -28,6 +28,7 @@ export class TagTableComponent implements AfterViewInit, OnDestroy {
   public tags: Tag[] = [];
   public dataSource: MatTableDataSource<TagTable>;
   @Output() public edit: EventEmitter<Tag> = new EventEmitter();
+  @Output() public delete: EventEmitter<void> = new EventEmitter();
 
   @ViewChild(MatPaginator) paginator?: MatPaginator;
   @ViewChild(MatSort) sort?: MatSort;
@@ -69,6 +70,7 @@ export class TagTableComponent implements AfterViewInit, OnDestroy {
       await this.tagService.deleteItem(tag);
       this.tagComponentService.removeUnselectedCategoriesByTagId(tag.id!, []);
       this.messageService.showOk('Tag deleted successfully');
+      this.delete.emit();
     }
   }
 

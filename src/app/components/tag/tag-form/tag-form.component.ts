@@ -17,7 +17,7 @@ export class TagFormComponent implements OnDestroy {
   public form: FormGroup = new FormGroup({});
   public nameControl: FormControl = new FormControl(null, [Validators.required]);
   public typeControl: FormControl = new FormControl(null, [Validators.required]);
-  public categoriesControl: FormControl = new FormControl([]);
+  public categoriesControl: FormControl = new FormControl([], [Validators.required]);
   private idControl: FormControl = new FormControl(null);
 
   public types: Type[] = [];

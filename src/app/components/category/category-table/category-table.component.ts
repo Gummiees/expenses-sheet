@@ -28,6 +28,7 @@ export class CategoryTableComponent implements AfterViewInit, OnDestroy {
   public categories: Category[] = [];
   public dataSource: MatTableDataSource<CategoryTable>;
   @Output() public edit: EventEmitter<Category> = new EventEmitter();
+  @Output() public delete: EventEmitter<void> = new EventEmitter();
 
   @ViewChild(MatPaginator) paginator?: MatPaginator;
   @ViewChild(MatSort) sort?: MatSort;
@@ -68,6 +69,7 @@ export class CategoryTableComponent implements AfterViewInit, OnDestroy {
     if (deleteConfirmation) {
       await this.categoryService.deleteItem(category);
       this.messageService.showOk('Category deleted successfully');
+      this.delete.emit();
     }
   }
 

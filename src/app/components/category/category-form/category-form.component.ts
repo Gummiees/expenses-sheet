@@ -49,8 +49,8 @@ export class CategoryFormComponent implements OnDestroy {
   }
 
   public async onSubmit() {
-    this.form.disable();
     const category = this.mapFormToCategory();
+    this.form.disable();
     if (!!this.selected) {
       category.id = this.idControl.value;
       await this.categoryService.updateItem(category);
