@@ -1,3 +1,5 @@
 <div class="flex flex-col gap-2">
+  <button mat-raised-button  color="accent" (click)="onNew()">Create new entry</button>
   <app-entry-table (edit)="selectedEntry = $event" (delete)="clean()"></app-entry-table>
+  <app-entry-form *ngIf="selectedEntry || createNewPressed" [selected]="selectedEntry" (save)="clean()" (cancel)="clean()"></app-entry-form>
 </div>

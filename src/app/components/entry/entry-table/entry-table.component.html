@@ -7,6 +7,14 @@
     <th mat-header-cell *matHeaderCellDef mat-sort-header aria-label="row descriptions"> Description </th>
     <td mat-cell *matCellDef="let element"> {{ element.description }} </td>
   </ng-container>
+  <ng-container matColumnDef="amount">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header aria-label="row totals"> Total </th>
+    <td mat-cell *matCellDef="let element" class="text-right pr-6"> {{ element.amount| number:'1.2-2' }} </td>
+  </ng-container>
+  <ng-container matColumnDef="date">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header aria-label="row dates"> Date </th>
+    <td mat-cell *matCellDef="let element"> {{ element.date | date:'dd/MM/yyyy' }} </td>
+  </ng-container>
   <ng-container matColumnDef="type">
     <th mat-header-cell *matHeaderCellDef mat-sort-header aria-label="row types"> Type </th>
     <td mat-cell *matCellDef="let element"> {{ element.type }} </td>

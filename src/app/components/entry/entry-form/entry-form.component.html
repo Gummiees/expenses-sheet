@@ -1,0 +1,70 @@
+<mat-card>
+  <form
+  [formGroup]="form"
+  (ngSubmit)="onSubmit()">
+    <div class="flex flex-col gap-2">
+      <h2> {{ !!selected ? 'Update' : 'New' }} entry </h2>
+      <mat-form-field appearance="outline">
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="name">
+        <mat-error *ngIf="descriptionControl.hasError('required')">
+          Description is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Amount</mat-label>
+        <input matInput type="number" min="0" step="0.01" formControlName="amount">
+        <mat-error *ngIf="descriptionControl.hasError('required')">
+          Amount is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Date</mat-label>
+        <input matInput [matDatepicker]="datepicker" formControlName="date">
+        <mat-hint>DD/MM/YYYY</mat-hint>
+        <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
+        <mat-datepicker #datepicker disabled="false"></mat-datepicker>
+        <mat-error *ngIf="dateControl.hasError('required')">
+          Date is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Type</mat-label>
+        <mat-select formControlName="type">
+          <mat-option *ngFor="let type of types" [value]="type">{{type.name}}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="typeControl.hasError('required')">
+          Type is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field *ngIf="typeControl.valid" appearance="outline" class="w-full">
+        <mat-label>{{typeControl.value!.name | titlecase }} categories</mat-label>
+        <mat-chip-list aria-label="Categories" selectable multiple>
+          <mat-chip *ngFor="let category of categories" [selected]="isCategorySelected(category)" (click)="onCategoryClicked(category)">
+            {{category.name}}
+          </mat-chip>
+        </mat-chip-list>
+        <mat-hint>Select the categories associated to the entry</mat-hint>
+        <mat-error *ngIf="categoriesControl.hasError('required')">
+          Category is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field *ngIf="categoriesControl.valid && this.tags.length" appearance="outline" class="w-full">
+        <mat-label>Categories tags</mat-label>
+        <mat-chip-list aria-label="Tags" selectable multiple>
+          <mat-chip *ngFor="let tag of tags" [selected]="isTagSelected(tag)" (click)="onTagClicked(tag)">
+            {{tag.name}}
+          </mat-chip>
+        </mat-chip-list>
+        <mat-hint>Select the tags associated to the entry</mat-hint>
+      </mat-form-field>
+    </div>
+    <div class="flex justify-end gap-2">
+      <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || form.disabled">Save</button>
+      <button mat-raised-button color="accent" type="button" (click)="onCancel()">Cancel</button>
+    </div>
+  </form>
+</mat-card>
+
+<div>
+

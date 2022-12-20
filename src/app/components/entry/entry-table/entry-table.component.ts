@@ -26,7 +26,15 @@ import { EntryTable } from './entry-table.model';
   templateUrl: './entry-table.component.html'
 })
 export class EntryTableComponent implements AfterViewInit, OnDestroy {
-  public displayedColumns: string[] = ['description', 'type', 'tags', 'categories', 'action'];
+  public displayedColumns: string[] = [
+    'description',
+    'amount',
+    'date',
+    'type',
+    'categories',
+    'tags',
+    'action'
+  ];
   public entries: Entry[] = [];
   public dataSource: MatTableDataSource<EntryTable>;
   @Output() public edit: EventEmitter<Entry> = new EventEmitter();
@@ -111,6 +119,8 @@ export class EntryTableComponent implements AfterViewInit, OnDestroy {
     );
     return {
       id: entry.id!,
+      amount: entry.amount,
+      date: entry.date,
       description: entry.description,
       type: types.find((type) => type?.id == entry.typeId)?.name ?? '',
       categories: entryCategories.map((category) => category.name!),
