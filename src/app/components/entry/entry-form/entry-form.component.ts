@@ -6,6 +6,7 @@ import { Tag } from '@shared/models/tag.model';
 import { Type } from '@shared/models/type.model';
 import { EntryService } from '@shared/services/entry.service';
 import { MessageService } from '@shared/services/message.service';
+import * as moment from 'moment';
 import { Subscription } from 'rxjs';
 import { EntryComponentService } from '../entry.component.service';
 
@@ -23,7 +24,7 @@ export class EntryFormComponent implements OnDestroy {
     Validators.required,
     Validators.min(0)
   ]);
-  public dateControl: FormControl<Date | null> = new FormControl<Date>(new Date(), [
+  public dateControl: FormControl<moment.Moment | null> = new FormControl<moment.Moment>(moment(), [
     Validators.required
   ]);
   public typeControl: FormControl<Type | null> = new FormControl<Type | null>(null, [
@@ -145,7 +146,7 @@ export class EntryFormComponent implements OnDestroy {
     return {
       description: this.descriptionControl.value!,
       amount: this.amountControl.value!,
-      date: this.dateControl.value!,
+      date: this.dateControl.value!.toDate(),
       typeId: this.typeControl.value!.id!,
       categoryIds,
       tagIds
@@ -174,7 +175,7 @@ export class EntryFormComponent implements OnDestroy {
   private setForm() {
     this.form = new FormGroup({
       id: this.idControl,
-      name: this.descriptionControl,
+      description: this.descriptionControl,
       amount: this.amountControl,
       date: this.dateControl,
       type: this.typeControl,

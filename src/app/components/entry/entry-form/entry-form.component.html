@@ -5,8 +5,8 @@
     <div class="flex flex-col gap-2">
       <h2> {{ !!selected ? 'Update' : 'New' }} entry </h2>
       <mat-form-field appearance="outline">
-        <mat-label>Name</mat-label>
-        <input matInput formControlName="name">
+        <mat-label>Description</mat-label>
+        <input matInput formControlName="description">
         <mat-error *ngIf="descriptionControl.hasError('required')">
           Description is <strong>required</strong>
         </mat-error>
