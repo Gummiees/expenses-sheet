@@ -11,7 +11,6 @@ import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable()
 export class TagComponentService {
-  public updateInterval: number = 60000;
   private types: Type[] = [];
   public types$: BehaviorSubject<Type[]> = new BehaviorSubject<Type[]>(this.types || []);
   private tags: Tag[] = [];

@@ -31,12 +31,6 @@ const routes: Routes = [
     ...canActivate(redirectUnauthorizedToSignIn)
   },
   {
-    path: 'add-entry',
-    loadChildren: () =>
-      import('./components/add-entry/add-entry.module').then((m) => m.AddEntryModule),
-    ...canActivate(redirectUnauthorizedToSignIn)
-  },
-  {
     path: 'category',
     loadChildren: () =>
       import('./components/category/category.module').then((m) => m.CategoryModule),

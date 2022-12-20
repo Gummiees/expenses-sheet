@@ -13,7 +13,6 @@ import { BehaviorSubject } from 'rxjs';
 
 @Injectable()
 export class EntryComponentService {
-  public updateInterval: number = 60000;
   private entries: Entry[] = [];
   public entries$: BehaviorSubject<Entry[]> = new BehaviorSubject<Entry[]>(this.entries || []);
   private types: Type[] = [];

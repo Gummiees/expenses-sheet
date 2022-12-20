@@ -9,7 +9,6 @@ import { BehaviorSubject } from 'rxjs';
 
 @Injectable()
 export class MainService {
-  public updateInterval: number = 60000;
   private types: Type[] = [];
   public types$: BehaviorSubject<Type[]> = new BehaviorSubject<Type[]>(this.types || []);
   private entries: Entry[] = [];
