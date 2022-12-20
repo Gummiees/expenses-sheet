@@ -141,8 +141,6 @@ export class EntryFormComponent implements OnDestroy {
     const tags: Tag[] = this.tagsControl.value;
     const tagIds = tags.map((tag) => tag.id!);
 
-    debugger;
-
     return {
       description: this.descriptionControl.value!,
       amount: this.amountControl.value!,
@@ -157,6 +155,8 @@ export class EntryFormComponent implements OnDestroy {
     this.form.patchValue({
       id: entry?.id,
       description: entry?.description,
+      amount: entry?.amount,
+      date: moment(entry?.date),
       type: this.types.find((type) => type.id === entry?.typeId),
       categories: entry
         ? this.categories.filter((category) => entry?.categoryIds.includes(category.id!))
@@ -250,7 +250,7 @@ export class EntryFormComponent implements OnDestroy {
 
   private subscribeToCategoriesControl() {
     const sub = this.categoriesControl.valueChanges.subscribe((val) => {
-      if (!!val) {
+      if (val && val.length) {
         this.subscribeToTags();
       } else {
         this.tags = [];
