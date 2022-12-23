@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
@@ -19,7 +20,8 @@ import { TotalsTableComponent } from './totals-table/totals-table.component';
     MatTabsModule,
     MatIconModule,
     MatCardModule,
-    MatTableModule
+    MatTableModule,
+    MatButtonModule
   ],
   providers: [MainService, MainComponentService]
 })

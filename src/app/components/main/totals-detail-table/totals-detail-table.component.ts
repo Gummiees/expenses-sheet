@@ -15,14 +15,29 @@ import { TotalsDetailTable } from './totals-detail-table.model';
   templateUrl: './totals-detail-table.component.html'
 })
 export class TotalsDetailTableComponent implements OnDestroy {
-  public monthColumns: string[] = getLast12Months().map((month) => moment(month).format('MMM YY'));
+  public monthColumns: string[] = getLast12Months(this.selectedMonth).map((month) =>
+    moment(month).format('MMM YY')
+  );
   public displayedColumns: string[] = ['name', ...this.monthColumns, 'total', 'average'];
   public entries: Entry[] = [];
   public dataSource: MatTableDataSource<TotalsDetailTable>;
+  public get selectedMonth(): Date {
+    return this._selectedMonth;
+  }
 
+  @Input() public set selectedMonth(month: Date) {
+    this._selectedMonth = month;
+    this.setMonthColumns();
+    this.entries = this.filterEntriesByDate(this.entriesByType);
+    this.setTableValues(this.entries, this.categories, this.tags);
+  }
   @Input() public typeName: TypeName = TypeName.expense;
 
+  private entriesByType: Entry[] = [];
+  private categories: Category[] = [];
+  private tags: Tag[] = [];
   private subscriptions: Subscription[] = [];
+  private _selectedMonth = new Date();
   constructor(public mainComponentService: MainComponentService) {
     this.dataSource = new MatTableDataSource();
     this.subscribeToEntries();
@@ -33,7 +48,6 @@ export class TotalsDetailTableComponent implements OnDestroy {
   }
 
   private subscribeToEntries() {
-    const last12Months = getLast12Months();
     const sub = combineLatest([
       this.mainComponentService.entries$,
       this.mainComponentService.categories$,
@@ -51,19 +65,27 @@ export class TotalsDetailTableComponent implements OnDestroy {
         if (!type) {
           return;
         }
-
-        this.entries = entries.filter(
-          (entry) =>
-            moment(entry.date).isBetween(last12Months[0], last12Months[11]) &&
-            type.id === entry.typeId
-        );
-
-        const usedCategories = this.getUsedCategories(this.entries, categories);
-        const usedTags = this.getUsedTags(this.entries, tags);
-        const table = this.transformEntriesToTable(entries, usedCategories, usedTags);
-        this.dataSource.data = table;
+        this.entriesByType = entries.filter((entry) => type.id === entry.typeId);
+        this.entries = this.filterEntriesByDate(this.entriesByType);
+        this.categories = [...categories];
+        this.tags = [...tags];
+        this.setTableValues(this.entries, this.categories, this.tags);
       });
     this.subscriptions.push(sub);
+  }
+
+  private filterEntriesByDate(entries: Entry[]): Entry[] {
+    const last12Months = getLast12Months(this.selectedMonth);
+    return entries.filter((entry) =>
+      moment(entry.date).isBetween(last12Months[0], last12Months[11])
+    );
+  }
+
+  private setTableValues(entries: Entry[], categories: Category[], tags: Tag[]) {
+    const usedCategories = this.getUsedCategories(this.entries, categories);
+    const usedTags = this.getUsedTags(this.entries, tags);
+    const table = this.transformEntriesToTable(entries, usedCategories, usedTags);
+    this.dataSource.data = table;
   }
 
   private getUsedCategories(entries: Entry[], categories: Category[]): Category[] {
@@ -79,7 +101,7 @@ export class TotalsDetailTableComponent implements OnDestroy {
   }
 
   private getAmounts(entries: Entry[]): number[] {
-    return getLast12Months().map((month) => {
+    return getLast12Months(this.selectedMonth).map((month) => {
       const monthlyEntries = entries.filter((entry) => entry.date.getMonth() === month.getMonth());
       return monthlyEntries
         .map((entry) => entry.amount)
@@ -94,7 +116,25 @@ export class TotalsDetailTableComponent implements OnDestroy {
   }
 
   private getAverage(entries: Entry[]): number {
+    if (!entries.length) {
+      return 0;
+    }
+    const total = this.getTotal(entries);
+    if (total === 0) {
+      return 0;
+    }
     return Math.round((this.getTotal(entries) / entries.length) * 100) / 100;
+  }
+
+  private setMonthColumns() {
+    this.monthColumns = getLast12Months(this.selectedMonth).map((month) =>
+      moment(month).format('MMM YY')
+    );
+    this.setDisplayedColumns();
+  }
+
+  private setDisplayedColumns() {
+    this.displayedColumns = ['name', ...this.monthColumns, 'total', 'average'];
   }
 
   private transformEntriesToTable(

@@ -1,6 +1,17 @@
 <div class="main flex flex-col gap-4">
-
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Filtered months</mat-card-title>
+    </mat-card-header>
+    <div class="flex flex-col">
+      <div class="text-center">From <b>{{ firstMonth | date:'MMMM yyyy' }}</b> to <b>{{ selectedMonth | date:'MMMM yyyy' }}</b></div>
+      <div class="flex justify-center">
+        <button mat-icon-button (click)="onMoveLeft()"><mat-icon>chevron_left</mat-icon></button>
+        <button mat-icon-button (click)="onMoveRight()"><mat-icon>chevron_right</mat-icon></button>
+      </div>
+    </div>
+  </mat-card>
 <app-totals-table></app-totals-table>
-<app-totals-detail-table [typeName]="expenseType"></app-totals-detail-table>
-<app-totals-detail-table [typeName]="incomeType"></app-totals-detail-table>
+<app-totals-detail-table [selectedMonth]="selectedMonth" [typeName]="expenseType"></app-totals-detail-table>
+<app-totals-detail-table [selectedMonth]="selectedMonth" [typeName]="incomeType"></app-totals-detail-table>
 </div>
