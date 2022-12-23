@@ -2,12 +2,11 @@ import { Component, OnDestroy } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { Entry } from '@shared/models/entry.model';
 import { Type, TypeName } from '@shared/models/type.model';
+import { getLast12Months } from '@shared/utils';
 import moment from 'moment';
 import { combineLatest, filter, Subscription } from 'rxjs';
 import { MainComponentService } from '../main.component.service';
 import { TotalsTable } from './totals-table.model';
-
-const TOTAL_MONTHS_YEARLY = 12;
 
 @Component({
   selector: 'app-totals-table',
@@ -38,12 +37,9 @@ export class TotalsTableComponent implements OnDestroy {
   }
 
   private getInitialData(): TotalsTable[] {
-    const totalsTable = [];
-    for (let i = 0; i < TOTAL_MONTHS_YEARLY; i++) {
-      totalsTable.push({
-        month: moment()
-          .subtract(TOTAL_MONTHS_YEARLY - 1 - i, 'month')
-          .toDate(),
+    return getLast12Months().map((month) => {
+      return {
+        month,
         expenses: 0,
         income: 0,
         savings: 0,
@@ -51,9 +47,8 @@ export class TotalsTableComponent implements OnDestroy {
         accumulatedSavings: 0,
         total: 0,
         accumulatedTotal: 0
-      });
-    }
-    return totalsTable;
+      };
+    });
   }
 
   private subscribeToEntries() {

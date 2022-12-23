@@ -1,4 +1,6 @@
-<div class="main">
+<div class="main flex flex-col gap-4">
 
 <app-totals-table></app-totals-table>
+<app-totals-detail-table [typeName]="expenseType"></app-totals-detail-table>
+<app-totals-detail-table [typeName]="incomeType"></app-totals-detail-table>
 </div>

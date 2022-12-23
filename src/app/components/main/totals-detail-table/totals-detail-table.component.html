@@ -1,0 +1,28 @@
+
+
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>{{typeName | titlecase }}s</mat-card-title>
+    </mat-card-header>
+
+  <table class="w-full" mat-table [dataSource]="dataSource" matSort>
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef> Name </th>
+    <td mat-cell *matCellDef="let element" [ngClass]="{ 'font-bold': element.isCategory }"> {{ element.name }} </td>
+  </ng-container>
+  <ng-container *ngFor="let column of monthColumns; index as i" [matColumnDef]="column">
+    <th mat-header-cell *matHeaderCellDef class="text-right"> {{column}} </th>
+    <td mat-cell *matCellDef="let element" class="text-right" [ngClass]="{ 'font-bold': element.isCategory }"> {{ element.amount[i] | number:'1.2-2' }} </td>
+  </ng-container>
+  <ng-container matColumnDef="total">
+    <th mat-header-cell *matHeaderCellDef class="text-right"> Total </th>
+    <td mat-cell *matCellDef="let element" class="text-right" [ngClass]="{ 'font-bold': element.isCategory }"> {{ element.total | number:'1.2-2' }} </td>
+  </ng-container>
+  <ng-container matColumnDef="average">
+    <th mat-header-cell *matHeaderCellDef class="text-right"> Average </th>
+    <td mat-cell *matCellDef="let element" class="text-right" [ngClass]="{ 'font-bold': element.isCategory }"> {{ element.average | number:'1.2-2' }} </td>
+  </ng-container>
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</mat-card>

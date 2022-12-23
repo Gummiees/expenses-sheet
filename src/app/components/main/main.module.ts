@@ -8,10 +8,11 @@ import { MainComponent } from './main.component';
 import { MainComponentService } from './main.component.service';
 import { MainRoutingModule } from './main.routes';
 import { MainService } from './main.service';
+import { TotalsDetailTableComponent } from './totals-detail-table/totals-detail-table.component';
 import { TotalsTableComponent } from './totals-table/totals-table.component';
 
 @NgModule({
-  declarations: [MainComponent, TotalsTableComponent],
+  declarations: [MainComponent, TotalsTableComponent, TotalsDetailTableComponent],
   imports: [
     SharedModule,
     MainRoutingModule,
